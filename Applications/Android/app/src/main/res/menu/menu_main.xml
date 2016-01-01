@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item android:id="@+id/menuSettings"
+          android:title="@string/settings"
+          android:orderInCategory="100"
+          app:showAsAction="never">
+
+        <menu>
+        <!--LEDs-->
+        <item android:title="@string/LEDs">
+            <menu>
+                <item android:id="@+id/menuLedsOn"
+                      android:title="@string/ledsON"/>
+                <item android:id="@+id/menuLedsOff"
+                      android:title="@string/ledsOFF"/>
+            </menu>
+        </item>
+
+        <!--SaveData-->
+        <item android:title="@string/saveData">
+            <menu>
+                <item android:id="@+id/menuSaveTemperature"
+                      android:title="@string/saveTemperature"/>
+                <item android:id="@+id/menuSaveDistance"
+                      android:title="@string/saveDistance"/>
+            </menu>
+        </item>
+
+        <!--Buzzer-->
+        <item android:id="@+id/menuBuzzer"
+              android:title="@string/buzzer"/>
+        </menu>
+
+
+    </item>
+</menu>
