@@ -204,6 +204,7 @@ public class MainActivity extends AppCompatActivity {
 
             case R.id.menuBuzzer:
                 Toast.makeText(getApplicationContext(), "Buzzer", Toast.LENGTH_SHORT).show(); //Delete this line
+                sendData("9"); //delete this line
                 buzzerBuzz();
                 break;
 
@@ -216,13 +217,7 @@ public class MainActivity extends AppCompatActivity {
 
     // ==================== ACTIONS FOR MENUS ===============
     private void buzzerBuzz(){
-        menuBuzzer.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                sendData("9");
-                Toast msg = Toast.makeText(getBaseContext(), "You have clicked MOVER FRENTE", Toast.LENGTH_SHORT);
-                msg.show();
-            }
-        });
+        sendData("9");
     }
 
     // ==================== MOVEMENT ===============
