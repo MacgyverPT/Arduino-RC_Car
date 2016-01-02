@@ -4,6 +4,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
+import android.drm.DrmStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -199,11 +200,30 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item){
         int id = item.getItemId();
 
+        switch(id){
+
+            case R.id.menuBuzzer:
+                Toast.makeText(getApplicationContext(), "Buzzer", Toast.LENGTH_SHORT).show(); //Delete this line
+                buzzerBuzz();
+                break;
+
+        }
+
 
         return super.onOptionsItemSelected(item);
     }
 
 
+    // ==================== ACTIONS FOR MENUS ===============
+    private void buzzerBuzz(){
+        menuBuzzer.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                sendData("9");
+                Toast msg = Toast.makeText(getBaseContext(), "You have clicked MOVER FRENTE", Toast.LENGTH_SHORT);
+                msg.show();
+            }
+        });
+    }
 
     // ==================== MOVEMENT ===============
     private void rcCarMove() {
