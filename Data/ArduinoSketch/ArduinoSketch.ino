@@ -56,6 +56,7 @@ void setup() {
   pinMode(buzzerSpeaker, OUTPUT);
   pinMode(led, OUTPUT);
   pinMode(trigUltraSounds, OUTPUT);
+  pinMode(echoUltraSounds, INPUT);
 }
 
 
