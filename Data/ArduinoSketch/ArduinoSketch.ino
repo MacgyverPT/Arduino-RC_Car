@@ -25,7 +25,7 @@ const byte motorBFrenteIN4 = 13;
 const byte motorSpeed = 255; //255 is the maximum > 0v low, 5v high
 
 //variaveis: pinos digitais
-const byte buzzerSpeak = 2;
+const byte buzzerSpeaker = 2;
 const byte led = 10;
 const byte echoUltraSounds = 11;
 const byte trigUltraSounds = 12;
@@ -65,16 +65,25 @@ void setup() {
 void loop() {
 
   //read from serial port
-  if( Serial.available() ){
+  if ( Serial.available() ) {
     dataFromBT = Serial.read();
   }
 
-  switch(dataFromBT){
-    case '1':
-      //mover frente
+  switch (dataFromBT) {
+    case '1': //mover frente
+      moveForward();
       break;
-    case '2':
-      // mover tras
+    case '2': //mover tras
+      moveBackward();
+      break;
+    case '3': //mover esquerda
+      moveLeft();
+      break;
+    case '4': //mover direita
+      moveRight();
+      break;
+    case '5': //parar
+      moveStop();
       break;
   }
 
@@ -89,9 +98,9 @@ void loop() {
 ///////////// FUNCTIONS /////////////
 
 /*
- * Show temperature in clesius degree
+   Show temperature in clesius degree
 */
-void showTemperature(){
+void showTemperature() {
   unsigned int tempC = 0;
   unsigned int readTempC = 0;
 
@@ -105,9 +114,9 @@ void showTemperature(){
 
 
 /*
- * Mostra a distancia do objecto que tem à sua frente
+   Mostra a distancia do objecto que tem à sua frente
 */
-void showDistance(){
+void showDistance() {
   unsigned long duration = 0;
   unsigned long distance = 0;
 
@@ -126,8 +135,74 @@ void showDistance(){
 
 
 
+///////////// MOVIMENTO /////////////
 
+void moveForward() {
+  // MOTOR A/B TRAS
+  analogWrite(motorAAtrasIN1, LOW);
+  analogWrite(motorAAtrasIN2, motorSpeed);
+  analogWrite(motorBAtrasIN3, LOW);
+  analogWrite(motorBAtrasIN4, motorSpeed);
 
+  // MOTOR A/B FRENTE
+  analogWrite(motorAFrenteIN1, motorSpeed);
+  analogWrite(motorAFrenteIN2, LOW);
+  analogWrite(motorBFrenteIN3, motorSpeed);
+  analogWrite(motorBFrenteIN4, LOW);
+}
 
+void moveBackward() {
+  // MOTOR A/B TRAS
+  analogWrite(motorAAtrasIN1, motorSpeed);
+  analogWrite(motorAAtrasIN2, LOW);
+  analogWrite(motorBAtrasIN3, motorSpeed);
+  analogWrite(motorBAtrasIN4, LOW);
 
+  // MOTOR A/B FRENTE
+  analogWrite(motorAFrenteIN1, LOW);
+  analogWrite(motorAFrenteIN2, motorSpeed);
+  analogWrite(motorBFrenteIN3, LOW);
+  analogWrite(motorBFrenteIN4, motorSpeed);
+}
 
+void moveLeft() {
+  // MOTOR A/B TRAS
+  analogWrite(motorAAtrasIN1, LOW);
+  analogWrite(motorAAtrasIN2, motorSpeed);
+  analogWrite(motorBAtrasIN3, motorSpeed);
+  analogWrite(motorBAtrasIN4, LOW);
+
+  // MOTOR A/B FRENTE
+  analogWrite(motorAFrenteIN1, LOW);
+  analogWrite(motorAFrenteIN2, LOW);
+  analogWrite(motorBFrenteIN3, LOW);
+  analogWrite(motorBFrenteIN4, LOW);
+}
+
+void moveRight() {
+  // MOTOR A/B TRAS
+  analogWrite(motorAAtrasIN1, motorSpeed);
+  analogWrite(motorAAtrasIN2, LOW);
+  analogWrite(motorBAtrasIN3, LOW);
+  analogWrite(motorBAtrasIN4, motorSpeed);
+
+  // MOTOR A/B FRENTE
+  analogWrite(motorAFrenteIN1, LOW);
+  analogWrite(motorAFrenteIN2, LOW);
+  analogWrite(motorBFrenteIN3, LOW);
+  analogWrite(motorBFrenteIN4, LOW);
+}
+
+void moveStop() {
+  // MOTOR A/B TRAS
+  analogWrite(motorAAtrasIN1, LOW);
+  analogWrite(motorAAtrasIN2, LOW);
+  analogWrite(motorBAtrasIN3, LOW);
+  analogWrite(motorBAtrasIN4, LOW);
+
+  // MOTOR A/B FRENTE
+  analogWrite(motorAFrenteIN1, LOW);
+  analogWrite(motorAFrenteIN2, LOW);
+  analogWrite(motorBFrenteIN3, LOW);
+  analogWrite(motorBFrenteIN4, LOW);
+}
