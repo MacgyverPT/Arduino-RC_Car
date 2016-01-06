@@ -26,7 +26,7 @@ const byte motorSpeed = 255; //255 is the maximum > 0v low, 5v high
 
 //variaveis: pinos digitais
 const byte buzzerSpeaker = 2;
-const byte led = 10;
+const byte ledPin = 10;
 const byte echoUltraSounds = 11;
 const byte trigUltraSounds = 12;
 
@@ -35,6 +35,7 @@ byte analogSensorLDR = 0;
 
 //variaveis:
 int delayTime = 1000; //this is in microseconds
+unsigned long distanceInCm = 0;
 byte dataFromBT;
 
 
@@ -54,7 +55,7 @@ void setup() {
   pinMode(motorBFrenteIN4, OUTPUT);
 
   pinMode(buzzerSpeaker, OUTPUT);
-  pinMode(led, OUTPUT);
+  pinMode(ledPin, OUTPUT);
   pinMode(trigUltraSounds, OUTPUT);
   pinMode(echoUltraSounds, INPUT);
 }
@@ -72,6 +73,9 @@ void loop() {
   switch (dataFromBT) {
     case '1': //mover frente
       moveForward();
+      if (distanceInCm <= 10) {
+        moveStop();
+      }
       break;
     case '2': //mover tras
       moveBackward();
@@ -85,12 +89,20 @@ void loop() {
     case '5': //parar
       moveStop();
       break;
+
+    case '8':
+      turnAllLedsON();
+      break;
+    case '9':
+      playBuzzer();
+      break;
   }
 
   showTemperature();
   delayTime;
   showDistance();
 
+  Serial.flush();
 }
 
 
@@ -127,10 +139,34 @@ void showDistance() {
   digitalWrite(trigUltraSounds, LOW);
 
   duration = pulseIn(echoUltraSounds, HIGH);
-  distance = (duration / 2) / 29.1;
+  distance = ((duration / 2) / 29.1) - 2;
+  distanceInCm = distance;
 
-  Serial.print(distance - 2); //-2cm para contar a partir do para-choques
+  Serial.print(distance); //-2cm para contar a partir do para-choques
   Serial.println(" cm");
+}
+
+
+/*
+   Play SuperMario theme
+*/
+void playBuzzer() {
+  int melodia[] = {660, 660, 660, 510, 660, 770, 380};
+  int duracaoDasNotas[] = {100, 100, 100, 100, 100, 100, 100};
+  int pausaDepoisDasNotas[] = {150, 300, 300, 100, 300, 550, 575};
+
+  for (int nota = 0; nota < 7; nota++) {
+    int duracaoDaNota = duracaoDasNotas[nota];
+    tone(buzzerSpeaker, melodia[nota], duracaoDaNota);
+    delay(pausaDepoisDasNotas[nota]);
+  }
+
+  noTone(buzzerSpeaker);
+}
+
+
+void turnAllLedsON() {
+  digitalWrite(ledPin, HIGH);
 }
 
 

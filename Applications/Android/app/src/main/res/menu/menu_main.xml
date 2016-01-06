@@ -2,12 +2,15 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item android:id="@+id/menuSettings"
-          android:title="@string/settings"
+    <item android:title="@string/settings"
           android:orderInCategory="100"
           app:showAsAction="never">
 
-        <menu>
+        <!--Buzzer-->
+        <item android:id="@+id/menuBuzzer"
+              android:title="@string/buzzer"/>
+
+
         <!--LEDs-->
         <item android:title="@string/LEDs">
             <menu>
@@ -17,6 +20,7 @@
                       android:title="@string/ledsOFF"/>
             </menu>
         </item>
+
 
         <!--SaveData-->
         <item android:title="@string/saveData">
@@ -28,10 +32,15 @@
             </menu>
         </item>
 
-        <!--Buzzer-->
-        <item android:id="@+id/menuBuzzer"
-              android:title="@string/buzzer"/>
-        </menu>
+        <!--Velocity-->
+        <item android:title="@string/velocity">
+            <menu>
+                <item android:id="@+id/menuVelocityMax"
+                      android:title="@string/velocityMax"/>
+                <item android:id="@+id/menuVelocityMin"
+                      android:title="@string/velocityMin"/>
+            </menu>
+        </item>
 
 
     </item>

@@ -14,5 +14,8 @@
     <string name="right">Right</string>
     <string name="stop">STOP</string>
     <string name="temperature">Temperature</string>
+    <string name="velocityMax">Velocity: FULL</string>
+    <string name="velocityMin">Velocity: SLOW</string>
     <string name="distance">Distance</string>
+    <string name="velocity">Velocity</string>
 </resources>

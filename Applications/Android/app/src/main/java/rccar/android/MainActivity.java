@@ -26,7 +26,8 @@ public class MainActivity extends AppCompatActivity {
 
     Button btnUp, btnDown, btnLeft, btnRight, btnStop;
     EditText edtxtTemp, edtxtDst;
-    MenuItem menuLedsOn, menuLedsOff, menuSaveTemperatureData, menuSaveDistanceData, menuBuzzer;
+    MenuItem menuLedsOn, menuLedsOff, menuSaveTemperatureData, menuSaveDistanceData,
+             menuBuzzer, menuVelocityMax, menuVelocityMin;
 
     private static final int REQUEST_ENABLE_BT = 1;
     private BluetoothAdapter btAdapter = null;
@@ -185,6 +186,8 @@ public class MainActivity extends AppCompatActivity {
         menuSaveTemperatureData = (MenuItem) findViewById(R.id.menuSaveTemperature);
         menuSaveDistanceData = (MenuItem) findViewById(R.id.menuSaveDistance);
         menuBuzzer = (MenuItem) findViewById(R.id.menuBuzzer);
+        menuVelocityMax = (MenuItem) findViewById(R.id.menuVelocityMax);
+        menuVelocityMin = (MenuItem) findViewById(R.id.menuVelocityMin);
     }
 
 
@@ -204,10 +207,21 @@ public class MainActivity extends AppCompatActivity {
 
             case R.id.menuBuzzer:
                 Toast.makeText(getApplicationContext(), "Buzzer", Toast.LENGTH_SHORT).show(); //Delete this line
-                sendData("9"); //delete this line
+                //sendData("9"); //delete this line
                 buzzerBuzz();
                 break;
 
+            case R.id.menuLedsOn:
+                ledsOn();
+                break;
+
+            case R.id.menuVelocityMax:
+                setCarMaxVelocity();
+                break;
+
+            case R.id.menuVelocityMin:
+                setCarMinVelocity();
+                break;
         }
 
 
@@ -215,9 +229,23 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+
+
     // ==================== ACTIONS FOR MENUS ===============
     private void buzzerBuzz(){
         sendData("9");
+    }
+
+    private void ledsOn(){
+        sendData("8");
+    }
+
+    private void setCarMaxVelocity() {
+        sendData("7");
+    }
+
+    private void setCarMinVelocity() {
+        sendData("6");
     }
 
     // ==================== MOVEMENT ===============
