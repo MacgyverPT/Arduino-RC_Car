@@ -22,7 +22,7 @@ const byte motorAFrenteIN1 = 4;
 const byte motorAFrenteIN2 = 7;
 const byte motorBFrenteIN3 = 8;
 const byte motorBFrenteIN4 = 13;
-const byte motorSpeed = 255; //255 is the maximum > 0v low, 5v high
+byte motorSpeed = 150; //255 is the maximum > 0v low, 5v high
 
 //variaveis: pinos digitais
 const byte buzzerSpeaker = 2;
@@ -90,6 +90,13 @@ void loop() {
       moveStop();
       break;
 
+    case '6':
+      //setSpeedMax();
+      break;
+    case '7':
+      //setSpeedMin();
+      break;
+
     case '8':
       turnAllLedsON();
       break;
@@ -102,7 +109,6 @@ void loop() {
   delayTime;
   showDistance();
 
-  Serial.flush();
 }
 
 
@@ -151,6 +157,7 @@ void showDistance() {
    Play SuperMario theme
 */
 void playBuzzer() {
+  digitalWrite(buzzerSpeaker, HIGH);
   int melodia[] = {660, 660, 660, 510, 660, 770, 380};
   int duracaoDasNotas[] = {100, 100, 100, 100, 100, 100, 100};
   int pausaDepoisDasNotas[] = {150, 300, 300, 100, 300, 550, 575};
@@ -162,11 +169,24 @@ void playBuzzer() {
   }
 
   noTone(buzzerSpeaker);
+  digitalWrite(buzzerSpeaker, LOW);
 }
 
 
 void turnAllLedsON() {
   digitalWrite(ledPin, HIGH);
+}
+
+void turnAllLedsOff(){
+  digitalWrite(ledPin, LOW);
+}
+
+void setSpeedMax() {
+  motorSpeed = 255;
+}
+
+void setSpeedMin() {
+  motorSpeed = 150;
 }
 
 

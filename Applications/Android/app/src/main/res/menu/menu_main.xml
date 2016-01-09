@@ -33,12 +33,12 @@
         </item>
 
         <!--Velocity-->
-        <item android:title="@string/velocity">
+        <item android:title="@string/speed">
             <menu>
                 <item android:id="@+id/menuVelocityMax"
-                      android:title="@string/velocityMax"/>
+                      android:title="@string/speedMax"/>
                 <item android:id="@+id/menuVelocityMin"
-                      android:title="@string/velocityMin"/>
+                      android:title="@string/speedMin"/>
             </menu>
         </item>
 

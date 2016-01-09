@@ -132,7 +132,7 @@ public class MainActivity extends AppCompatActivity {
     * Check for Bluetooth support and then check to make sure it is turned on
     */
     private void errorExit(String title, String message) {
-        Toast msg = Toast.makeText(getBaseContext(), title + " - " + message, Toast.LENGTH_SHORT);
+        Toast msg = Toast.makeText(getBaseContext(), title + " - " + message, Toast.LENGTH_LONG);
         msg.show();
         finish();
     }
@@ -188,6 +188,9 @@ public class MainActivity extends AppCompatActivity {
         menuBuzzer = (MenuItem) findViewById(R.id.menuBuzzer);
         menuVelocityMax = (MenuItem) findViewById(R.id.menuVelocityMax);
         menuVelocityMin = (MenuItem) findViewById(R.id.menuVelocityMin);
+
+        edtxtDst.setEnabled(false);
+        edtxtTemp.setEnabled(false);
     }
 
 
@@ -213,6 +216,14 @@ public class MainActivity extends AppCompatActivity {
 
             case R.id.menuLedsOn:
                 ledsOn();
+                break;
+
+            case R.id.menuLedsOff:
+                //FAZER
+                break;
+
+            case R.id.menuSaveDistance:
+                menuSaveDistanceToFile();
                 break;
 
             case R.id.menuVelocityMax:
@@ -248,6 +259,10 @@ public class MainActivity extends AppCompatActivity {
         sendData("6");
     }
 
+    private void menuSaveDistanceToFile(){
+
+    }
+
     // ==================== MOVEMENT ===============
     private void rcCarMove() {
         moveForward();
@@ -265,6 +280,7 @@ public class MainActivity extends AppCompatActivity {
                 sendData("1");
                 Toast msg = Toast.makeText(getBaseContext(), "You have clicked MOVER FRENTE", Toast.LENGTH_SHORT);
                 msg.show();
+                edtxtDst.append("FRENTE\n");
             }
         });
     }
@@ -278,6 +294,7 @@ public class MainActivity extends AppCompatActivity {
                 sendData("2");
                 Toast msg = Toast.makeText(getBaseContext(), "You have clicked MOVER TRAS", Toast.LENGTH_SHORT);
                 msg.show();
+                edtxtDst.append("TRAS\n");
             }
         });
     }
@@ -291,6 +308,7 @@ public class MainActivity extends AppCompatActivity {
                 sendData("3");
                 Toast msg = Toast.makeText(getBaseContext(), "You have clicked MOVER ESQUERDA", Toast.LENGTH_SHORT);
                 msg.show();
+                edtxtDst.append("ESQUERDA\n");
             }
         });
     }
@@ -304,6 +322,7 @@ public class MainActivity extends AppCompatActivity {
                 sendData("4");
                 Toast msg = Toast.makeText(getBaseContext(), "You have clicked MOVER DIREITA", Toast.LENGTH_SHORT);
                 msg.show();
+                edtxtDst.append("DIREITA\n");
             }
         });
     }
@@ -317,6 +336,7 @@ public class MainActivity extends AppCompatActivity {
                 sendData("5");
                 Toast msg = Toast.makeText(getBaseContext(), "You have clicked STOP", Toast.LENGTH_SHORT);
                 msg.show();
+                edtxtDst.append("STOP\n");
             }
         });
     }
