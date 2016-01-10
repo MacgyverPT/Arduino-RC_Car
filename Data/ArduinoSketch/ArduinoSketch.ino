@@ -31,12 +31,14 @@ const byte echoUltraSounds = 11;
 const byte trigUltraSounds = 12;
 
 //variaveis: pinos analogicos
-byte analogSensorLDR = 0;
+byte analogSensorLM35 = A0;
+int analogSensorLDR = A1;
 
 //variaveis:
 int delayTime = 1000; //this is in microseconds
 unsigned long distanceInCm = 0;
 byte dataFromBT;
+int tempC;
 
 
 
@@ -108,25 +110,42 @@ void loop() {
   showTemperature();
   delayTime;
   showDistance();
-
+  delayTime;
+  //lightSensor();
+  delayTime;
+  showAllOutputs();
 }
 
 
 
 ///////////// FUNCTIONS /////////////
 
+void showAllOutputs(){
+  //light sensor
+  Serial.print("Light Sensor: ");
+  Serial.println(analogSensorLDR); 
+  //temperature
+  Serial.print(" Temperature: ");
+  Serial.print( (float)tempC );
+  Serial.println("ºC");
+  //distance
+  Serial.print("    Distance: ");
+  Serial.print(distanceInCm);
+  Serial.println(" cm");
+}
+
 /*
    Show temperature in clesius degree
 */
 void showTemperature() {
-  unsigned int tempC = 0;
+  //unsigned int tempC = 0;
   unsigned int readTempC = 0;
 
-  readTempC = analogRead(analogSensorLDR);
+  readTempC = analogRead(analogSensorLM35);
   tempC = ( 5.0 * readTempC * 100.0 ) / 1024.0;
 
-  Serial.print( (float)tempC );
-  Serial.println("ºC");
+  //Serial.print( (float)tempC );
+  //Serial.println("ºC");
 }
 
 
@@ -148,8 +167,23 @@ void showDistance() {
   distance = ((duration / 2) / 29.1) - 2;
   distanceInCm = distance;
 
-  Serial.print(distance); //-2cm para contar a partir do para-choques
-  Serial.println(" cm");
+  //Serial.print(distance); //-2cm para contar a partir do para-choques
+  //Serial.println(" cm");
+}
+
+/*
+ * Acende os leds caso nao haja luz no local onde o carro esta
+ */
+void lightSensor(){
+  analogSensorLDR = analogRead(1);
+
+  if(analogSensorLDR < 15){
+    digitalWrite(ledPin, HIGH);
+  }else{
+    digitalWrite(ledPin, LOW);
+  }
+
+  
 }
 
 

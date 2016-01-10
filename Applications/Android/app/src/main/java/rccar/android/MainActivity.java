@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
     Button btnUp, btnDown, btnLeft, btnRight, btnStop;
     EditText edtxtTemp, edtxtDst;
     MenuItem menuLedsOn, menuLedsOff, menuSaveTemperatureData, menuSaveDistanceData,
-             menuBuzzer, menuVelocityMax, menuVelocityMin;
+             menuBuzzer, menuSpeedMax, menuSpeedMin;
 
     private static final int REQUEST_ENABLE_BT = 1;
     private BluetoothAdapter btAdapter = null;
@@ -186,8 +186,8 @@ public class MainActivity extends AppCompatActivity {
         menuSaveTemperatureData = (MenuItem) findViewById(R.id.menuSaveTemperature);
         menuSaveDistanceData = (MenuItem) findViewById(R.id.menuSaveDistance);
         menuBuzzer = (MenuItem) findViewById(R.id.menuBuzzer);
-        menuVelocityMax = (MenuItem) findViewById(R.id.menuVelocityMax);
-        menuVelocityMin = (MenuItem) findViewById(R.id.menuVelocityMin);
+        menuSpeedMax = (MenuItem) findViewById(R.id.menuSpeedMax);
+        menuSpeedMin = (MenuItem) findViewById(R.id.menuSpeedMin);
 
         edtxtDst.setEnabled(false);
         edtxtTemp.setEnabled(false);
@@ -226,12 +226,12 @@ public class MainActivity extends AppCompatActivity {
                 menuSaveDistanceToFile();
                 break;
 
-            case R.id.menuVelocityMax:
-                setCarMaxVelocity();
+            case R.id.menuSpeedMax:
+                setCarMaxSpeed();
                 break;
 
-            case R.id.menuVelocityMin:
-                setCarMinVelocity();
+            case R.id.menuSpeedMin:
+                setCarMinSpeed();
                 break;
         }
 
@@ -251,11 +251,11 @@ public class MainActivity extends AppCompatActivity {
         sendData("8");
     }
 
-    private void setCarMaxVelocity() {
+    private void setCarMaxSpeed() {
         sendData("7");
     }
 
-    private void setCarMinVelocity() {
+    private void setCarMinSpeed() {
         sendData("6");
     }
 
@@ -280,7 +280,7 @@ public class MainActivity extends AppCompatActivity {
                 sendData("1");
                 Toast msg = Toast.makeText(getBaseContext(), "You have clicked MOVER FRENTE", Toast.LENGTH_SHORT);
                 msg.show();
-                edtxtDst.append("FRENTE\n");
+                edtxtDst.append("FRENTE\n"); //apagar
             }
         });
     }
@@ -294,7 +294,7 @@ public class MainActivity extends AppCompatActivity {
                 sendData("2");
                 Toast msg = Toast.makeText(getBaseContext(), "You have clicked MOVER TRAS", Toast.LENGTH_SHORT);
                 msg.show();
-                edtxtDst.append("TRAS\n");
+                edtxtDst.append("TRAS\n"); //apagar
             }
         });
     }
@@ -308,7 +308,7 @@ public class MainActivity extends AppCompatActivity {
                 sendData("3");
                 Toast msg = Toast.makeText(getBaseContext(), "You have clicked MOVER ESQUERDA", Toast.LENGTH_SHORT);
                 msg.show();
-                edtxtDst.append("ESQUERDA\n");
+                edtxtDst.append("ESQUERDA\n"); //apagar
             }
         });
     }
@@ -322,7 +322,7 @@ public class MainActivity extends AppCompatActivity {
                 sendData("4");
                 Toast msg = Toast.makeText(getBaseContext(), "You have clicked MOVER DIREITA", Toast.LENGTH_SHORT);
                 msg.show();
-                edtxtDst.append("DIREITA\n");
+                edtxtDst.append("DIREITA\n"); //apagar
             }
         });
     }
@@ -336,7 +336,7 @@ public class MainActivity extends AppCompatActivity {
                 sendData("5");
                 Toast msg = Toast.makeText(getBaseContext(), "You have clicked STOP", Toast.LENGTH_SHORT);
                 msg.show();
-                edtxtDst.append("STOP\n");
+                edtxtDst.append("STOP\n"); //apagar
             }
         });
     }

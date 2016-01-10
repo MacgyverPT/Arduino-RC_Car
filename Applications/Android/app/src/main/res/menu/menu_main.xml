@@ -35,9 +35,9 @@
         <!--Velocity-->
         <item android:title="@string/speed">
             <menu>
-                <item android:id="@+id/menuVelocityMax"
+                <item android:id="@+id/menuSpeedMax"
                       android:title="@string/speedMax"/>
-                <item android:id="@+id/menuVelocityMin"
+                <item android:id="@+id/menuSpeedMin"
                       android:title="@string/speedMin"/>
             </menu>
         </item>
