@@ -54,39 +54,21 @@
         android:id="@+id/txtViewTemperatura"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/temperature"
+        android:text="@string/temperatureDistanceText"
         android:textStyle="bold"
-        android:layout_marginStart="97dp"
-        android:layout_alignBaseline="@+id/btnUp"
-        android:layout_alignBottom="@+id/btnUp"
-        android:layout_toEndOf="@+id/btnRight" />
-
-
-    <TextView
-        android:id="@+id/txViewDistancia"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/distance"
-        android:textStyle="bold"
-        android:layout_alignBottom="@+id/btnRight"
-        android:layout_alignStart="@+id/txtViewTemperatura"/>
+        android:layout_alignTop="@+id/btnUp"
+        android:layout_alignStart="@+id/edtTxtDataFromArduino"/>
 
     <EditText
-        android:id="@+id/edtTxtTemperatura"
+        android:id="@+id/edtTxtDataFromArduino"
         android:layout_width="wrap_content"
         android:layout_height="80dp"
         android:inputType="textMultiLine"
         android:ems="10"
         android:layout_below="@+id/txtViewTemperatura"
-        android:layout_alignStart="@+id/txtViewTemperatura" />
+        android:layout_alignBottom="@+id/btnDown"
+        android:layout_alignParentEnd="true"
+        android:layout_toEndOf="@+id/btnRight"/>
 
-    <EditText
-        android:id="@+id/edtTxtDistancia"
-        android:layout_width="wrap_content"
-        android:layout_height="80dp"
-        android:inputType="textMultiLine"
-        android:ems="10"
-        android:layout_below="@+id/txViewDistancia"
-        android:layout_alignStart="@+id/txViewDistancia" />
 
 </RelativeLayout>

@@ -69,8 +69,6 @@ void setup() {
   pinMode(ledPin, OUTPUT);
   pinMode(trigUltraSounds, OUTPUT);
   pinMode(echoUltraSounds, INPUT);
-
-  playBuzzer();
 }
 
 
@@ -115,6 +113,7 @@ void loop() {
       break;
   }
 
+
   if (direction == FORWARD && distanceInCm <= 10) {
     moveStop();
   }
@@ -135,7 +134,7 @@ void showAllOutputs(){
   showDistance();
   //lightSensor();
   
-  Serial.print("Next obstacle at distance: ");
+  Serial.print("Obstacle at distance: ");
   Serial.print(distanceInCm);
   Serial.print(" cm. Temperature: ");
   Serial.println( (float)tempC );

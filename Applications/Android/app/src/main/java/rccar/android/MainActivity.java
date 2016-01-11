@@ -3,8 +3,11 @@ package rccar.android;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
+import android.content.Context;
 import android.content.Intent;
 import android.drm.DrmStore;
+import android.net.Uri;
+import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,6 +19,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.common.api.GoogleApiClient;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.UUID;
@@ -24,10 +34,9 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "RC Car Controller";
 
-    Button btnUp, btnDown, btnLeft, btnRight, btnStop;
-    EditText edtxtTemp, edtxtDst;
-    MenuItem menuLedsOn, menuLedsOff, menuSaveTemperatureData, menuSaveDistanceData,
-             menuBuzzer, menuSpeedMax, menuSpeedMin;
+    public Button btnUp, btnDown, btnLeft, btnRight, btnStop;
+    public EditText edtTxtDataFromArduino;
+    public MenuItem menuLedsOn, menuLedsOff, menuSaveData, menuBuzzer, menuExit;
 
     private static final int REQUEST_ENABLE_BT = 1;
     private BluetoothAdapter btAdapter = null;
@@ -40,15 +49,22 @@ public class MainActivity extends AppCompatActivity {
     // Insert your bluetooth devices MAC address
     private static String address = "20:15:10:12:51:65";
 
+    // Directory to save the file
+    public String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Downaload";
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    private GoogleApiClient client;
 
 
-
-    /* Called when the activity is first created. */
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "In onCreate()");
         setContentView(R.layout.activity_main);
+
+        File dir = new File(path);
+        dir.mkdirs();
 
         //create all items on screen (buttons, menu items, edit text, etc
         createButtons();
@@ -59,6 +75,9 @@ public class MainActivity extends AppCompatActivity {
 
         //car movement
         rcCarMove();
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
 
@@ -121,7 +140,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        try     {
+        try {
             btSocket.close();
         } catch (IOException e2) {
             errorExit("Fatal Error", "In onPause() and failed to close socket." + e2.getMessage() + ".");
@@ -142,7 +161,7 @@ public class MainActivity extends AppCompatActivity {
     */
     private void checkBTState() {
         // Emulator doesn't support Bluetooth and will return null
-        if(btAdapter==null) {
+        if (btAdapter == null) {
             errorExit("Fatal Error", "Bluetooth Not supported. Aborting.");
         } else {
             if (btAdapter.isEnabled()) {
@@ -165,9 +184,10 @@ public class MainActivity extends AppCompatActivity {
         } catch (IOException e) {
             String msg = "In onResume() and an exception occurred during write: " + e.getMessage();
             //if (address.equals("00:00:00:00:00:00"))
-            if(address.equals(MY_UUID))
+            if (address.equals(MY_UUID)) {
                 msg = msg + ".\n\nUpdate your server address from " + MY_UUID.toString() + " to the correct address on line 37 in the java code";
-            msg = msg +  ".\n\nCheck that the SPP UUID: " + MY_UUID.toString() + " exists on server.\n\n";
+            }
+            msg = msg + ".\n\nCheck that the SPP UUID: " + MY_UUID.toString() + " exists on server.\n\n";
 
             errorExit("Fatal Error", msg);
         }
@@ -179,34 +199,30 @@ public class MainActivity extends AppCompatActivity {
         btnLeft = (Button) findViewById(R.id.btnLeft);
         btnRight = (Button) findViewById(R.id.btnRight);
         btnStop = (Button) findViewById(R.id.btnStop);
-        edtxtTemp = (EditText) findViewById(R.id.edtTxtTemperatura);
-        edtxtDst = (EditText) findViewById(R.id.edtTxtDistancia);
+        edtTxtDataFromArduino = (EditText) findViewById(R.id.edtTxtDataFromArduino);
         menuLedsOn = (MenuItem) findViewById(R.id.menuLedsOn);
         menuLedsOff = (MenuItem) findViewById(R.id.menuLedsOff);
-        menuSaveTemperatureData = (MenuItem) findViewById(R.id.menuSaveTemperature);
-        menuSaveDistanceData = (MenuItem) findViewById(R.id.menuSaveDistance);
         menuBuzzer = (MenuItem) findViewById(R.id.menuBuzzer);
-        menuSpeedMax = (MenuItem) findViewById(R.id.menuSpeedMax);
-        menuSpeedMin = (MenuItem) findViewById(R.id.menuSpeedMin);
+        menuSaveData = (MenuItem) findViewById(R.id.menuSaveData);
+        menuExit = (MenuItem) findViewById(R.id.menuExit);
 
-        edtxtDst.setEnabled(false);
-        edtxtTemp.setEnabled(false);
+        edtTxtDataFromArduino.setEnabled(false);
     }
 
 
     // ==================== MENUS ==================
 
-    public boolean onCreateOptionsMenu(Menu menu){
+    public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
 
         inflater.inflate(R.menu.menu_main, menu);
         return true;
     }
 
-    public boolean onOptionsItemSelected(MenuItem item){
+    public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        switch(id){
+        switch (id) {
             case R.id.menuBuzzer:
                 //Toast.makeText(getApplicationContext(), "Buzzer", Toast.LENGTH_SHORT).show(); //Delete this line
                 buzzerBuzz();
@@ -220,8 +236,8 @@ public class MainActivity extends AppCompatActivity {
                 ledsOff();
                 break;
 
-            case R.id.menuSaveDistance:
-                menuSaveDistanceToFile();
+            case R.id.menuSaveData:
+                menuSaveDataToFile();
                 break;
         }
 
@@ -230,26 +246,37 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
-
     // ==================== ACTIONS FOR MENUS ===============
-    private void buzzerBuzz(){
+    private void buzzerBuzz() {
         sendData("9");
     }
 
-    private void ledsOn(){
+    private void ledsOn() {
         sendData("6");
     }
 
-    private void ledsOff(){
+    private void ledsOff() {
         sendData("7");
     }
 
 
-    private void menuSaveDistanceToFile(){
+    private void menuSaveDataToFile() {
 
     }
 
+
+
+    /*
+    * Check's if external storage is available for read and write
+    * */
+    public boolean isExternalStorageWritable() {
+        String state = Environment.getExternalStorageState();
+        if (Environment.MEDIA_MOUNTED.equals(state)) {
+            return true;
+        }
+
+        return false;
+    }
 
 
     // ==================== MOVEMENT ===============
@@ -262,16 +289,17 @@ public class MainActivity extends AppCompatActivity {
         moveRight();
         moveStop();
     }
+
     /*
     *Move RC Car to FORWARD
     * */
-    public void moveForward(){
+    public void moveForward() {
         btnUp.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 sendData("1");
                 //Toast msg = Toast.makeText(getBaseContext(), "You have clicked MOVER FRENTE", Toast.LENGTH_SHORT);
                 //msg.show();
-                edtxtDst.append("FRENTE\n"); //apagar
+                edtTxtDataFromArduino.append("FRENTE\n"); //apagar
             }
         });
     }
@@ -279,13 +307,13 @@ public class MainActivity extends AppCompatActivity {
     /*
     *Move RC Car to BACKWARD
     * */
-    public void moveBackward(){
+    public void moveBackward() {
         btnDown.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 sendData("2");
                 //Toast msg = Toast.makeText(getBaseContext(), "You have clicked MOVER TRAS", Toast.LENGTH_SHORT);
                 //msg.show();
-                edtxtDst.append("TRAS\n"); //apagar
+                edtTxtDataFromArduino.append("TRAS\n"); //apagar
             }
         });
     }
@@ -293,13 +321,13 @@ public class MainActivity extends AppCompatActivity {
     /*
     *Move RC Car to LEFT
     * */
-    public void moveLeft(){
+    public void moveLeft() {
         btnLeft.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 sendData("3");
                 //Toast msg = Toast.makeText(getBaseContext(), "You have clicked MOVER ESQUERDA", Toast.LENGTH_SHORT);
                 //msg.show();
-                edtxtDst.append("ESQUERDA\n"); //apagar
+                edtTxtDataFromArduino.append("ESQUERDA\n"); //apagar
             }
         });
     }
@@ -307,13 +335,13 @@ public class MainActivity extends AppCompatActivity {
     /*
     *Move RC Car to RIGHT
     * */
-    public void moveRight(){
+    public void moveRight() {
         btnRight.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 sendData("4");
                 //Toast msg = Toast.makeText(getBaseContext(), "You have clicked MOVER DIREITA", Toast.LENGTH_SHORT);
                 //msg.show();
-                edtxtDst.append("DIREITA\n"); //apagar
+                edtTxtDataFromArduino.append("DIREITA\n"); //apagar
             }
         });
     }
@@ -321,16 +349,55 @@ public class MainActivity extends AppCompatActivity {
     /*
     *Move RC Car to STOP
     * */
-    public void moveStop(){
+    public void moveStop() {
         btnStop.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 sendData("5");
                 //Toast msg = Toast.makeText(getBaseContext(), "You have clicked STOP", Toast.LENGTH_SHORT);
                 //msg.show();
-                edtxtDst.append("STOP\n"); //apagar
+                edtTxtDataFromArduino.append("STOP\n"); //apagar
             }
         });
     }
 
 
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client.connect();
+        Action viewAction = Action.newAction(
+                Action.TYPE_VIEW, // TODO: choose an action type.
+                "Main Page", // TODO: Define a title for the content shown.
+                // TODO: If you have web page content that matches this app activity's content,
+                // make sure this auto-generated web page URL is correct.
+                // Otherwise, set the URL to null.
+                Uri.parse("http://host/path"),
+                // TODO: Make sure this auto-generated app deep link URI is correct.
+                Uri.parse("android-app://rccar.android/http/host/path")
+        );
+        AppIndex.AppIndexApi.start(client, viewAction);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        Action viewAction = Action.newAction(
+                Action.TYPE_VIEW, // TODO: choose an action type.
+                "Main Page", // TODO: Define a title for the content shown.
+                // TODO: If you have web page content that matches this app activity's content,
+                // make sure this auto-generated web page URL is correct.
+                // Otherwise, set the URL to null.
+                Uri.parse("http://host/path"),
+                // TODO: Make sure this auto-generated app deep link URI is correct.
+                Uri.parse("android-app://rccar.android/http/host/path")
+        );
+        AppIndex.AppIndexApi.end(client, viewAction);
+        client.disconnect();
+    }
 }

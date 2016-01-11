@@ -5,17 +5,13 @@
     <string name="ledsON">LED ON</string>
     <string name="ledsOFF">LED OFF</string>
     <string name="saveData">Save Data</string>
-    <string name="saveTemperature">Save Temperature Data</string>
-    <string name="saveDistance">Save Distance Data</string>
     <string name="buzzer">Buzzer</string>
     <string name="up">UP</string>
     <string name="left">Left</string>
     <string name="down">Down</string>
     <string name="right">Right</string>
     <string name="stop">STOP</string>
-    <string name="temperature">Temperature</string>
-    <string name="speedMax">Speed: FULL</string>
-    <string name="speedMin">Speed: SLOW</string>
-    <string name="distance">Distance</string>
     <string name="speed">Speed</string>
+    <string name="temperatureDistanceText">Distance / Temperature</string>
+    <string name="menuExit">Exit</string>
 </resources>

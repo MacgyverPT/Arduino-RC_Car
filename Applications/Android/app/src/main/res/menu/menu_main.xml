@@ -23,24 +23,29 @@
 
 
         <!--SaveData-->
-        <item android:title="@string/saveData">
+        <item android:id="@+id/menuSaveData"
+              android:title="@string/saveData"/>
+        <!--<item android:title="@string/saveData">
             <menu>
-                <item android:id="@+id/menuSaveTemperature"
-                      android:title="@string/saveTemperature"/>
+
                 <item android:id="@+id/menuSaveDistance"
                       android:title="@string/saveDistance"/>
             </menu>
-        </item>
+        </item>-->
 
         <!--Velocity-->
-        <item android:title="@string/speed">
+        <!--<item android:title="@string/speed">
             <menu>
                 <item android:id="@+id/menuSpeedMax"
                       android:title="@string/speedMax"/>
                 <item android:id="@+id/menuSpeedMin"
                       android:title="@string/speedMin"/>
             </menu>
-        </item>
+        </item>-->
+
+        <!--SaveData-->
+        <item android:id="@+id/menuExit"
+              android:title="@string/menuExit"/>
 
 
     </item>
