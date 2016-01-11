@@ -207,10 +207,8 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         switch(id){
-
             case R.id.menuBuzzer:
-                Toast.makeText(getApplicationContext(), "Buzzer", Toast.LENGTH_SHORT).show(); //Delete this line
-                //sendData("9"); //delete this line
+                //Toast.makeText(getApplicationContext(), "Buzzer", Toast.LENGTH_SHORT).show(); //Delete this line
                 buzzerBuzz();
                 break;
 
@@ -219,19 +217,11 @@ public class MainActivity extends AppCompatActivity {
                 break;
 
             case R.id.menuLedsOff:
-                //FAZER
+                ledsOff();
                 break;
 
             case R.id.menuSaveDistance:
                 menuSaveDistanceToFile();
-                break;
-
-            case R.id.menuSpeedMax:
-                setCarMaxSpeed();
-                break;
-
-            case R.id.menuSpeedMin:
-                setCarMinSpeed();
                 break;
         }
 
@@ -248,22 +238,23 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void ledsOn(){
-        sendData("8");
+        sendData("6");
     }
 
-    private void setCarMaxSpeed() {
+    private void ledsOff(){
         sendData("7");
     }
 
-    private void setCarMinSpeed() {
-        sendData("6");
-    }
 
     private void menuSaveDistanceToFile(){
 
     }
 
+
+
     // ==================== MOVEMENT ===============
+
+
     private void rcCarMove() {
         moveForward();
         moveBackward();
@@ -278,8 +269,8 @@ public class MainActivity extends AppCompatActivity {
         btnUp.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 sendData("1");
-                Toast msg = Toast.makeText(getBaseContext(), "You have clicked MOVER FRENTE", Toast.LENGTH_SHORT);
-                msg.show();
+                //Toast msg = Toast.makeText(getBaseContext(), "You have clicked MOVER FRENTE", Toast.LENGTH_SHORT);
+                //msg.show();
                 edtxtDst.append("FRENTE\n"); //apagar
             }
         });
@@ -292,8 +283,8 @@ public class MainActivity extends AppCompatActivity {
         btnDown.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 sendData("2");
-                Toast msg = Toast.makeText(getBaseContext(), "You have clicked MOVER TRAS", Toast.LENGTH_SHORT);
-                msg.show();
+                //Toast msg = Toast.makeText(getBaseContext(), "You have clicked MOVER TRAS", Toast.LENGTH_SHORT);
+                //msg.show();
                 edtxtDst.append("TRAS\n"); //apagar
             }
         });
@@ -306,8 +297,8 @@ public class MainActivity extends AppCompatActivity {
         btnLeft.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 sendData("3");
-                Toast msg = Toast.makeText(getBaseContext(), "You have clicked MOVER ESQUERDA", Toast.LENGTH_SHORT);
-                msg.show();
+                //Toast msg = Toast.makeText(getBaseContext(), "You have clicked MOVER ESQUERDA", Toast.LENGTH_SHORT);
+                //msg.show();
                 edtxtDst.append("ESQUERDA\n"); //apagar
             }
         });
@@ -320,8 +311,8 @@ public class MainActivity extends AppCompatActivity {
         btnRight.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 sendData("4");
-                Toast msg = Toast.makeText(getBaseContext(), "You have clicked MOVER DIREITA", Toast.LENGTH_SHORT);
-                msg.show();
+                //Toast msg = Toast.makeText(getBaseContext(), "You have clicked MOVER DIREITA", Toast.LENGTH_SHORT);
+                //msg.show();
                 edtxtDst.append("DIREITA\n"); //apagar
             }
         });
@@ -334,8 +325,8 @@ public class MainActivity extends AppCompatActivity {
         btnStop.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 sendData("5");
-                Toast msg = Toast.makeText(getBaseContext(), "You have clicked STOP", Toast.LENGTH_SHORT);
-                msg.show();
+                //Toast msg = Toast.makeText(getBaseContext(), "You have clicked STOP", Toast.LENGTH_SHORT);
+                //msg.show();
                 edtxtDst.append("STOP\n"); //apagar
             }
         });

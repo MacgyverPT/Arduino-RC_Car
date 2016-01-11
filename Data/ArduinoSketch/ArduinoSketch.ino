@@ -14,39 +14,48 @@
 */
 
 //variavéis para os motores/rodas
-const byte motorAAtrasIN1 = 3;
-const byte motorAAtrasIN2 = 5;
-const byte motorBAtrasIN3 = 6;
-const byte motorBAtrasIN4 = 9;
-const byte motorAFrenteIN1 = 4;
-const byte motorAFrenteIN2 = 7;
-const byte motorBFrenteIN3 = 8;
-const byte motorBFrenteIN4 = 13;
-byte motorSpeed = 150; //255 is the maximum > 0v low, 5v high
+#define motorAAtrasIN1 3
+#define motorAAtrasIN2 5
+#define motorBAtrasIN3 6
+#define motorBAtrasIN4 9
+#define motorAFrenteIN1 4
+#define motorAFrenteIN2 7
+#define motorBFrenteIN3 8
+#define motorBFrenteIN4 13
+byte motorSpeed = 250; //255 is the maximum > 0v low, 5v high
 
 //variaveis: pinos digitais
-const byte buzzerSpeaker = 2;
-const byte ledPin = 10;
-const byte echoUltraSounds = 11;
-const byte trigUltraSounds = 12;
+#define buzzerSpeaker 2
+#define ledPin 10
+#define echoUltraSounds 11
+#define trigUltraSounds 12
 
 //variaveis: pinos analogicos
-byte analogSensorLM35 = A0;
-int analogSensorLDR = A1;
+#define analogSensorLM35 A0
+int analogSensorLDR;
 
 //variaveis:
-int delayTime = 1000; //this is in microseconds
+#define delayTime 100 //this is in microseconds
 unsigned long distanceInCm = 0;
-byte dataFromBT;
+int dataFromBT;
 int tempC;
 
 
+enum DIRECTION{
+  STOP,
+  FORWARD,
+  BACKWARD,
+  LEFT,
+  RIGHT 
+};
+
+byte direction = STOP;
 
 
 // put your setup code here, to run once:
 void setup() {
   Serial.begin(9600);
-
+  
   pinMode(motorAAtrasIN1, OUTPUT);
   pinMode(motorAAtrasIN2, OUTPUT);
   pinMode(motorBAtrasIN3, OUTPUT);
@@ -60,24 +69,25 @@ void setup() {
   pinMode(ledPin, OUTPUT);
   pinMode(trigUltraSounds, OUTPUT);
   pinMode(echoUltraSounds, INPUT);
+
+  playBuzzer();
 }
 
 
 
 //put your main code here, to run repeatedly:
 void loop() {
-
+  dataFromBT = 0;
+  
+  
   //read from serial port
   if ( Serial.available() ) {
     dataFromBT = Serial.read();
   }
-
+  
   switch (dataFromBT) {
     case '1': //mover frente
       moveForward();
-      if (distanceInCm <= 10) {
-        moveStop();
-      }
       break;
     case '2': //mover tras
       moveBackward();
@@ -93,27 +103,26 @@ void loop() {
       break;
 
     case '6':
-      //setSpeedMax();
-      break;
-    case '7':
-      //setSpeedMin();
-      break;
-
-    case '8':
       turnAllLedsON();
       break;
+    case '7':
+      turnAllLedsOFF();
+      break;
+
+    
     case '9':
       playBuzzer();
       break;
   }
 
-  showTemperature();
-  delayTime;
-  showDistance();
-  delayTime;
-  //lightSensor();
-  delayTime;
+  if (direction == FORWARD && distanceInCm <= 10) {
+    moveStop();
+  }
+
+  
+  
   showAllOutputs();
+  delay(delayTime);
 }
 
 
@@ -121,8 +130,19 @@ void loop() {
 ///////////// FUNCTIONS /////////////
 
 void showAllOutputs(){
+
+  showTemperature();
+  showDistance();
+  //lightSensor();
+  
+  Serial.print("Next obstacle at distance: ");
+  Serial.print(distanceInCm);
+  Serial.print(" cm. Temperature: ");
+  Serial.println( (float)tempC );
+
+  
   //light sensor
-  Serial.print("Light Sensor: ");
+  /*Serial.print("Light Sensor: ");
   Serial.println(analogSensorLDR); 
   //temperature
   Serial.print(" Temperature: ");
@@ -131,7 +151,7 @@ void showAllOutputs(){
   //distance
   Serial.print("    Distance: ");
   Serial.print(distanceInCm);
-  Serial.println(" cm");
+  Serial.println(" cm");*/
 }
 
 /*
@@ -211,88 +231,110 @@ void turnAllLedsON() {
   digitalWrite(ledPin, HIGH);
 }
 
-void turnAllLedsOff(){
+void turnAllLedsOFF(){
   digitalWrite(ledPin, LOW);
 }
 
-void setSpeedMax() {
-  motorSpeed = 255;
-}
-
-void setSpeedMin() {
-  motorSpeed = 150;
-}
 
 
 
 ///////////// MOVIMENTO /////////////
 
 void moveForward() {
+  direction = FORWARD;
+  
   // MOTOR A/B TRAS
-  analogWrite(motorAAtrasIN1, LOW);
-  analogWrite(motorAAtrasIN2, motorSpeed);
-  analogWrite(motorBAtrasIN3, LOW);
-  analogWrite(motorBAtrasIN4, motorSpeed);
+  digitalWrite(motorAAtrasIN1, LOW);
+  digitalWrite(motorBAtrasIN3, LOW);
+
+  digitalWrite(motorAAtrasIN2, HIGH);
+  //analogWrite(motorAAtrasIN2, motorSpeed);
+  //analogWrite(motorBAtrasIN4, motorSpeed);
+  digitalWrite(motorBAtrasIN4, HIGH);
 
   // MOTOR A/B FRENTE
-  analogWrite(motorAFrenteIN1, motorSpeed);
-  analogWrite(motorAFrenteIN2, LOW);
-  analogWrite(motorBFrenteIN3, motorSpeed);
-  analogWrite(motorBFrenteIN4, LOW);
+  digitalWrite(motorAFrenteIN2, LOW);
+  digitalWrite(motorBFrenteIN4, LOW);
+
+  digitalWrite(motorAFrenteIN1, HIGH);
+  //analogWrite(motorAFrenteIN1, motorSpeed);
+  //analogWrite(motorBFrenteIN3, motorSpeed);
+  digitalWrite(motorBFrenteIN3, HIGH);
+  
 }
 
 void moveBackward() {
+  direction = BACKWARD;
+  
   // MOTOR A/B TRAS
-  analogWrite(motorAAtrasIN1, motorSpeed);
-  analogWrite(motorAAtrasIN2, LOW);
-  analogWrite(motorBAtrasIN3, motorSpeed);
-  analogWrite(motorBAtrasIN4, LOW);
+  //analogWrite(motorAAtrasIN1, motorSpeed);
+  digitalWrite(motorAAtrasIN2, LOW);
+  //analogWrite(motorBAtrasIN3, motorSpeed);
+  digitalWrite(motorBAtrasIN4, LOW);
+
+  digitalWrite(motorAAtrasIN1, HIGH);
+  digitalWrite(motorBAtrasIN3, HIGH);
 
   // MOTOR A/B FRENTE
-  analogWrite(motorAFrenteIN1, LOW);
-  analogWrite(motorAFrenteIN2, motorSpeed);
-  analogWrite(motorBFrenteIN3, LOW);
-  analogWrite(motorBFrenteIN4, motorSpeed);
+  digitalWrite(motorAFrenteIN1, LOW);
+  //analogWrite(motorAFrenteIN2, motorSpeed);
+  digitalWrite(motorBFrenteIN3, LOW);
+  //analogWrite(motorBFrenteIN4, motorSpeed);
+
+  digitalWrite(motorAFrenteIN2, HIGH);
+  digitalWrite(motorBFrenteIN4, HIGH);
 }
 
 void moveLeft() {
+  direction = LEFT;
+  
   // MOTOR A/B TRAS
-  analogWrite(motorAAtrasIN1, LOW);
-  analogWrite(motorAAtrasIN2, motorSpeed);
-  analogWrite(motorBAtrasIN3, motorSpeed);
-  analogWrite(motorBAtrasIN4, LOW);
+  digitalWrite(motorAAtrasIN1, LOW);
+  //analogWrite(motorAAtrasIN2, motorSpeed);
+  //analogWrite(motorBAtrasIN3, motorSpeed);
+  digitalWrite(motorBAtrasIN4, LOW);
 
   // MOTOR A/B FRENTE
-  analogWrite(motorAFrenteIN1, LOW);
-  analogWrite(motorAFrenteIN2, LOW);
-  analogWrite(motorBFrenteIN3, LOW);
-  analogWrite(motorBFrenteIN4, LOW);
+  digitalWrite(motorAFrenteIN1, LOW);
+  digitalWrite(motorAFrenteIN2, LOW);
+  digitalWrite(motorBFrenteIN3, LOW);
+  digitalWrite(motorBFrenteIN4, LOW);
+
+  digitalWrite(motorAAtrasIN2, HIGH);
+  digitalWrite(motorBAtrasIN3, HIGH);
 }
 
 void moveRight() {
+  direction = RIGHT;
+  
   // MOTOR A/B TRAS
-  analogWrite(motorAAtrasIN1, motorSpeed);
-  analogWrite(motorAAtrasIN2, LOW);
-  analogWrite(motorBAtrasIN3, LOW);
-  analogWrite(motorBAtrasIN4, motorSpeed);
+  //analogWrite(motorAAtrasIN1, motorSpeed);
+  digitalWrite(motorAAtrasIN2, LOW);
+  digitalWrite(motorBAtrasIN3, LOW);
+  //analogWrite(motorBAtrasIN4, motorSpeed);
 
   // MOTOR A/B FRENTE
-  analogWrite(motorAFrenteIN1, LOW);
-  analogWrite(motorAFrenteIN2, LOW);
-  analogWrite(motorBFrenteIN3, LOW);
-  analogWrite(motorBFrenteIN4, LOW);
+  digitalWrite(motorAFrenteIN1, LOW);
+  digitalWrite(motorAFrenteIN2, LOW);
+  digitalWrite(motorBFrenteIN3, LOW);
+  digitalWrite(motorBFrenteIN4, LOW);
+
+  digitalWrite(motorAAtrasIN1, HIGH);
+  digitalWrite(motorBAtrasIN4, HIGH);
 }
 
 void moveStop() {
+  direction = STOP;
+  
   // MOTOR A/B TRAS
-  analogWrite(motorAAtrasIN1, LOW);
-  analogWrite(motorAAtrasIN2, LOW);
-  analogWrite(motorBAtrasIN3, LOW);
-  analogWrite(motorBAtrasIN4, LOW);
+  digitalWrite(motorAAtrasIN1, LOW);
+  digitalWrite(motorAAtrasIN2, LOW);
+  digitalWrite(motorBAtrasIN3, LOW);
+  digitalWrite(motorBAtrasIN4, LOW);
 
   // MOTOR A/B FRENTE
-  analogWrite(motorAFrenteIN1, LOW);
-  analogWrite(motorAFrenteIN2, LOW);
-  analogWrite(motorBFrenteIN3, LOW);
-  analogWrite(motorBFrenteIN4, LOW);
+  digitalWrite(motorAFrenteIN1, LOW);
+  digitalWrite(motorAFrenteIN2, LOW);
+  digitalWrite(motorBFrenteIN3, LOW);
+  digitalWrite(motorBFrenteIN4, LOW);
 }
