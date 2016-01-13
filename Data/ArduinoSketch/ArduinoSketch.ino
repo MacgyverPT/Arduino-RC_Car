@@ -128,6 +128,8 @@ void loop() {
 
 ///////////// FUNCTIONS /////////////
 
+/* Mostra o output no terminal
+*/
 void showAllOutputs() {
 
   showTemperature();
@@ -142,8 +144,7 @@ void showAllOutputs() {
   Serial.println( sensorLDRReading );
 }
 
-/*
-   Show temperature in clesius degree
+/*Show temperature in clesius degree
 */
 void showTemperature() {
   unsigned int readTempC = 0;
@@ -152,8 +153,7 @@ void showTemperature() {
   tempC = ( 5.0 * readTempC * 100.0 ) / 1024.0;
 }
 
-/*
-   Mostra a distancia do objecto que tem à sua frente
+/*Mostra a distancia do objecto que tem à sua frente
 */
 void showDistance() {
   unsigned long duration = 0;
@@ -170,8 +170,7 @@ void showDistance() {
   distanceInCm = distance;
 }
 
-/*
-   Acende os leds caso nao haja luz no local onde o carro esta
+/*Acende os leds caso nao haja luz no local onde o carro esta
 */
 void lightSensor() {
   sensorLDRReading = analogRead(analogSensorLDR);
@@ -183,9 +182,7 @@ void lightSensor() {
   }
 }
 
-
-/*
-   Play SuperMario theme
+/*Play SuperMario theme
 */
 void playBuzzer() {
   int melodia[] = {660, 660, 660, 510, 660, 770, 380};
@@ -201,13 +198,16 @@ void playBuzzer() {
   noTone(buzzerSpeaker);
 }
 
-
+/*Liga todos os leds (isto se nao tivesse acendido automaticamente)
+*/
 void turnAllLedsON() {
   if ( sensorLDRReading > LDRMaxValueToTurnOnLED) {
     digitalWrite(ledPin, HIGH);
   }
 }
 
+/*Desliga todos os Leds (isto se nao tivesse acendido automaticamente)
+*/
 void turnAllLedsOFF() {
   if ( sensorLDRReading > LDRMaxValueToTurnOnLED) {
     digitalWrite(ledPin, LOW);
