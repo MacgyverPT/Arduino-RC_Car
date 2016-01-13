@@ -32,13 +32,14 @@ byte motorSpeed = 250; //255 is the maximum > 0v low, 5v high
 
 //variaveis: pinos analogicos
 #define analogSensorLM35 A0
-int analogSensorLDR;
+#define analogSensorLDR A1
 
 //variaveis:
-#define delayTime 100 //this is in microseconds
+#define delayTime 1000 //this is in microseconds
 unsigned long distanceInCm = 0;
-int dataFromBT;
+unsigned int sensorLDRReading = 0;
 int tempC;
+int dataFromBT;
 
 
 enum DIRECTION{
@@ -76,7 +77,6 @@ void setup() {
 //put your main code here, to run repeatedly:
 void loop() {
   dataFromBT = 0;
-  
   
   //read from serial port
   if ( Serial.available() ) {
@@ -119,7 +119,6 @@ void loop() {
   }
 
   
-  
   showAllOutputs();
   delay(delayTime);
 }
@@ -132,32 +131,20 @@ void showAllOutputs(){
 
   showTemperature();
   showDistance();
-  //lightSensor();
+  lightSensor();
   
   Serial.print("Obstacle at distance: ");
   Serial.print(distanceInCm);
   Serial.print(" cm. Temperature: ");
-  Serial.println( (float)tempC );
-
-  
-  //light sensor
-  /*Serial.print("Light Sensor: ");
-  Serial.println(analogSensorLDR); 
-  //temperature
-  Serial.print(" Temperature: ");
   Serial.print( (float)tempC );
-  Serial.println("ºC");
-  //distance
-  Serial.print("    Distance: ");
-  Serial.print(distanceInCm);
-  Serial.println(" cm");*/
+  Serial.print(" Light Sensor Value: ");
+  Serial.println( sensorLDRReading );
 }
 
 /*
    Show temperature in clesius degree
 */
 void showTemperature() {
-  //unsigned int tempC = 0;
   unsigned int readTempC = 0;
 
   readTempC = analogRead(analogSensorLM35);
@@ -166,8 +153,6 @@ void showTemperature() {
   //Serial.print( (float)tempC );
   //Serial.println("ºC");
 }
-
-
 
 /*
    Mostra a distancia do objecto que tem à sua frente
@@ -186,22 +171,19 @@ void showDistance() {
   distance = ((duration / 2) / 29.1) - 2;
   distanceInCm = distance;
 
-  //Serial.print(distance); //-2cm para contar a partir do para-choques
-  //Serial.println(" cm");
 }
 
 /*
  * Acende os leds caso nao haja luz no local onde o carro esta
  */
 void lightSensor(){
-  analogSensorLDR = analogRead(1);
+  sensorLDRReading = analogRead(analogSensorLDR);
 
-  if(analogSensorLDR < 15){
+  if(sensorLDRReading < 250 ){
     digitalWrite(ledPin, HIGH);
   }else{
     digitalWrite(ledPin, LOW);
   }
-
   
 }
 
