@@ -247,10 +247,6 @@ public class MainActivity extends AppCompatActivity {
 
 
     // ==================== ACTIONS FOR MENUS ===============
-    private void buzzerBuzz() {
-        sendData("9");
-    }
-
     private void ledsOn() {
         sendData("6");
     }
@@ -259,6 +255,9 @@ public class MainActivity extends AppCompatActivity {
         sendData("7");
     }
 
+    private void buzzerBuzz() {
+        sendData("8");
+    }
 
     private void menuSaveDataToFile() {
 
