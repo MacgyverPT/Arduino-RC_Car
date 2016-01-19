@@ -22,7 +22,7 @@
 #define motorAFrenteIN2 7
 #define motorBFrenteIN3 8
 #define motorBFrenteIN4 13
-byte motorSpeed = 250; //255 is the maximum > 0v low, 5v high
+//byte motorSpeed = 250; //255 is the maximum > 0v low, 5v high
 
 //pinos digitais
 #define buzzerSpeaker 2
@@ -36,9 +36,9 @@ byte motorSpeed = 250; //255 is the maximum > 0v low, 5v high
 
 //variaveis:
 #define delayTime 1000 //this is in microseconds
+#define LDRMaxValueToTurnLEDON 100 //Max value for LDR to turn LED ON
 unsigned long distanceInCm = 0;
 unsigned int sensorLDRReading = 0;
-unsigned int LDRMaxValueToTurnOnLED = 250;
 int tempC;
 int dataFromBT;
 
@@ -115,7 +115,7 @@ void loop() {
   }
 
 
-  if (direction == FORWARD && distanceInCm <= 10) {
+  if (direction == FORWARD && distanceInCm <= 60) {
     moveStop();
   }
 
@@ -123,6 +123,7 @@ void loop() {
   showAllOutputs();
   delay(delayTime);
 }
+
 
 
 
@@ -144,7 +145,7 @@ void showAllOutputs() {
   Serial.println( sensorLDRReading );
 }
 
-/*Show temperature in clesius degree
+/* Show temperature in clesius degree
 */
 void showTemperature() {
   unsigned int readTempC = 0;
@@ -153,7 +154,7 @@ void showTemperature() {
   tempC = ( 5.0 * readTempC * 100.0 ) / 1024.0;
 }
 
-/*Mostra a distancia do objecto que tem à sua frente
+/* Mostra a distancia do objecto que tem à sua frente
 */
 void showDistance() {
   unsigned long duration = 0;
@@ -170,19 +171,19 @@ void showDistance() {
   distanceInCm = distance;
 }
 
-/*Acende os leds caso nao haja luz no local onde o carro esta
+/* Acende os leds caso nao haja luz no local onde o carro esta
 */
 void lightSensor() {
   sensorLDRReading = analogRead(analogSensorLDR);
 
-  if (sensorLDRReading < LDRMaxValueToTurnOnLED ) {
+  if (sensorLDRReading < LDRMaxValueToTurnLEDON ) {
     digitalWrite(ledPin, HIGH);
   } else {
     digitalWrite(ledPin, LOW);
   }
 }
 
-/*Play SuperMario theme
+/* Play SuperMario theme
 */
 void playBuzzer() {
   int melodia[] = {660, 660, 660, 510, 660, 770, 380};
@@ -198,18 +199,18 @@ void playBuzzer() {
   noTone(buzzerSpeaker);
 }
 
-/*Liga todos os leds (isto se nao tivesse acendido automaticamente)
+/* Liga todos os leds (isto se nao tivesse acendido automaticamente)
 */
 void turnAllLedsON() {
-  if ( sensorLDRReading > LDRMaxValueToTurnOnLED) {
+  if ( sensorLDRReading > LDRMaxValueToTurnLEDON) {
     digitalWrite(ledPin, HIGH);
   }
 }
 
-/*Desliga todos os Leds (isto se nao tivesse acendido automaticamente)
+/* Desliga todos os Leds (isto se nao tivesse acendido automaticamente)
 */
 void turnAllLedsOFF() {
-  if ( sensorLDRReading > LDRMaxValueToTurnOnLED) {
+  if ( sensorLDRReading > LDRMaxValueToTurnLEDON) {
     digitalWrite(ledPin, LOW);
   }
 }
