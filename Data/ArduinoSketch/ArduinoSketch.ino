@@ -41,6 +41,7 @@ unsigned long distanceInCm = 0;
 unsigned int sensorLDRReading = 0;
 int tempC;
 int dataFromBT;
+boolean ledFlag = false;
 
 
 enum DIRECTION {
@@ -135,11 +136,15 @@ void showAllOutputs() {
 
   showTemperature();
   showDistance();
-  lightSensor();
+
+  if (ledFlag == false){
+    lightSensor();
+    //ledFlag = false;
+  }
 
   Serial.print("Obstacle at distance: ");
   Serial.print(distanceInCm);
-  Serial.print("cm. | Temperature: ");
+  Serial.print("cm | Temperature: ");
   Serial.print( (float)tempC );
   Serial.print("ºc | Light Sensor Value: ");
   Serial.println( sensorLDRReading );
@@ -202,17 +207,15 @@ void playBuzzer() {
 /* Liga todos os leds (isto se nao tivesse acendido automaticamente)
 */
 void turnAllLedsON() {
-  if ( sensorLDRReading > LDRMaxValueToTurnLEDON) {
-    digitalWrite(ledPin, HIGH);
-  }
+  digitalWrite(ledPin, HIGH);
+  ledFlag = true;
 }
 
 /* Desliga todos os Leds (isto se nao tivesse acendido automaticamente)
 */
 void turnAllLedsOFF() {
-  if ( sensorLDRReading > LDRMaxValueToTurnLEDON) {
     digitalWrite(ledPin, LOW);
-  }
+    ledFlag = false;
 }
 
 
