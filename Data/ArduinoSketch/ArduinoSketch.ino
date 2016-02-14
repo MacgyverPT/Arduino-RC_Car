@@ -1,9 +1,8 @@
 /* Programa: Arduino RC Car
 
    Descrição:
-   Neste sketch estão reunidos todas as funcionalidade do RC Car, tal como recolha de informação
-   para o utilizador, movimento do carro, conectar via Bluetooth, etc.
-
+   Programação do RC Car. Aqui estão programadas todas as funcionalidades, bem como alguma IA do mesmo. Este
+   mesmo sketch recebe as ordens vindas da aplicação Android (controlo remoto via bluetooth).
 
    Autor: Miguel Rosa
    Data: Dezembro 2015 / Janeiro 2016
@@ -13,7 +12,7 @@
    Docente: Nuno Pereira
 */
 
-//motores/rodas
+//Definição dos pinos: motores/rodas
 #define motorAAtrasIN1 3
 #define motorAAtrasIN2 5
 #define motorBAtrasIN3 6
@@ -24,13 +23,13 @@
 #define motorBFrenteIN4 13
 //byte motorSpeed = 250; //255 is the maximum > 0v low, 5v high
 
-//pinos digitais
+//Definição dos pinos digitais
 #define buzzerSpeaker 2
 #define ledPin 10
 #define echoUltraSounds 11
 #define trigUltraSounds 12
 
-//pinos analogicos
+//Definição dos pinos analogicos
 #define analogSensorLM35 A0
 #define analogSensorLDR A1
 
@@ -39,9 +38,9 @@
 #define LDRMaxValueToTurnLEDON 100 //Max value for LDR to turn LED ON
 unsigned long distanceInCm = 0;
 unsigned int sensorLDRReading = 0;
+boolean ledFlag = false;
 int tempC;
 int dataFromBT;
-boolean ledFlag = false;
 
 
 enum DIRECTION {
@@ -55,7 +54,7 @@ enum DIRECTION {
 byte direction = STOP;
 
 
-// put your setup code here, to run once:
+//Definição dos modos (entrada/saida) dos pinos
 void setup() {
   Serial.begin(9600);
 
@@ -76,7 +75,6 @@ void setup() {
 
 
 
-//put your main code here, to run repeatedly:
 void loop() {
   dataFromBT = 0;
 
@@ -85,6 +83,7 @@ void loop() {
     dataFromBT = Serial.read();
   }
 
+  //consoante a opção seleccionada na aplicação android
   switch (dataFromBT) {
     case '1': //mover frente
       moveForward();
@@ -101,26 +100,24 @@ void loop() {
     case '5': //parar
       moveStop();
       break;
-    case '6':
+    case '6': //acender os leds
       turnAllLedsON();
       break;
-    case '7':
+    case '7': //apagar os leds
       turnAllLedsOFF();
       break;
-    case '8':
+    case '8': //tocar musica
       playBuzzer();
-      break;
-    case '9':
-      //
       break;
   }
 
 
+  //verifica se não há colisão com um objeto à sua frente
   if (direction == FORWARD && distanceInCm <= 60) {
     moveStop();
   }
 
-
+  //mostra os outputs para o serial monitor
   showAllOutputs();
   delay(delayTime);
 }
@@ -137,8 +134,9 @@ void showAllOutputs() {
   showTemperature();
   showDistance();
 
+  //Se os leds nao forem ligados pela opcao 6 (ligar manualmente), sao ligados automaticamente
   if (ledFlag == false){
-    lightSensor();
+    automaticLights();
     //ledFlag = false;
   }
 
@@ -178,7 +176,7 @@ void showDistance() {
 
 /* Acende os leds caso nao haja luz no local onde o carro esta
 */
-void lightSensor() {
+void automaticLights() {
   sensorLDRReading = analogRead(analogSensorLDR);
 
   if (sensorLDRReading < LDRMaxValueToTurnLEDON ) {
@@ -186,6 +184,20 @@ void lightSensor() {
   } else {
     digitalWrite(ledPin, LOW);
   }
+}
+
+/* Liga todos os leds (isto se nao acenderem automaticamente)
+*/
+void turnAllLedsON() {
+  digitalWrite(ledPin, HIGH);
+  ledFlag = true;
+}
+
+/* Desliga todos os Leds (isto se nao acenderem automaticamente)
+*/
+void turnAllLedsOFF() {
+    digitalWrite(ledPin, LOW);
+    ledFlag = false;
 }
 
 /* Play SuperMario theme
@@ -204,19 +216,7 @@ void playBuzzer() {
   noTone(buzzerSpeaker);
 }
 
-/* Liga todos os leds (isto se nao tivesse acendido automaticamente)
-*/
-void turnAllLedsON() {
-  digitalWrite(ledPin, HIGH);
-  ledFlag = true;
-}
 
-/* Desliga todos os Leds (isto se nao tivesse acendido automaticamente)
-*/
-void turnAllLedsOFF() {
-    digitalWrite(ledPin, LOW);
-    ledFlag = false;
-}
 
 
 
